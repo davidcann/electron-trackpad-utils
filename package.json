@@ -1,0 +1,31 @@
+{
+	"name": "electron-trackpad-utils",
+	"version": "1.0.0",
+	"description": "Trigger trackpad haptic feedback and get trackpad scroll began, scroll ended, and force click events in Electron on macOS.",
+	"main": "addon.js",
+	"types": "types.d.ts",
+	"author": "David Cann <david@davidcann.com> (https://davidcann.com)",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/davidcann/electron-trackpad-utils.git"
+	},
+	"keywords": [
+		"electron",
+		"electronjs",
+		"trackpad",
+		"haptic",
+		"macos",
+		"mac"
+	],
+	"bugs": {
+		"url": "https://github.com/davidcann/electron-trackpad-utils/issues"
+	},
+	"homepage": "https://github.com/davidcann/electron-trackpad-utils#readme",
+	"dependencies": {
+		"bindings": "^1.5.0",
+		"node-addon-api": "^7.0.0"
+	},
+	"gypfile": true,
+	"type": "commonjs"
+}
