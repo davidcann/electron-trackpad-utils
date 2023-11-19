@@ -3,10 +3,10 @@
 #include <napi.h>
 #import <objc/runtime.h>
 
-Napi::ThreadSafeFunction tsfnBegan;
+Napi::ThreadSafeFunction tsfnBegan = NULL;
 void (*callbackBegan)(Napi::Env env, Napi::Function jsCallback);
 
-Napi::ThreadSafeFunction tsfnEnded;
+Napi::ThreadSafeFunction tsfnEnded = NULL;
 void (*callbackEnded)(Napi::Env env, Napi::Function jsCallback);
 
 Napi::ThreadSafeFunction tsfnForceClick;
@@ -43,13 +43,17 @@ int lastPressureStage = 0;
 	if (self.type == NSEventTypeScrollWheel) {
 		if ([self phase] == NSEventPhaseBegan) {
 			if (lastBeganDate == nil || [lastBeganDate timeIntervalSinceNow] < -0.002) {
-				tsfnBegan.BlockingCall(callbackBegan);
+				if (tsfnBegan != NULL) {
+					tsfnBegan.BlockingCall(callbackBegan);
+				}
 			}
 			lastBeganDate = [NSDate date];
 			began = true;
 		} else if ([self phase] == NSEventPhaseEnded && began == true) {
 			if (lastEndedDate == nil || [lastEndedDate timeIntervalSinceNow] < -0.002) {
-				tsfnEnded.BlockingCall(callbackEnded);
+				if (tsfnEnded != NULL) {
+					tsfnEnded.BlockingCall(callbackEnded);
+				}
 			}
 			lastEndedDate = [NSDate date];
 			began = false;
