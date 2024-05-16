@@ -86,7 +86,7 @@ int lastPressureStage = 0;
 
 - (void)my_sendEvent:(NSEvent *)event {
 	if (event.type == NSEventTypePressure && event.pressureBehavior == NSPressureBehaviorPrimaryDeepClick) {
-		if (lastPressureStage == 1 && event.stage == 2) {
+		if (lastPressureStage == 1 && event.stage == 2 && tsfnForceClick != NULL && callbackForceClick != NULL) {
 			tsfnForceClick.BlockingCall(callbackForceClick);
 		}
 		lastPressureStage = event.stage;
@@ -110,8 +110,13 @@ void setupEnded(const Napi::CallbackInfo &info) {
 
 void setupForceClick(const Napi::CallbackInfo &info) {
 	Napi::Env env = info.Env();
-	tsfnForceClick = Napi::ThreadSafeFunction::New(env, info[0].As<Napi::Function>(), "ForceClick", 0, 1);
-	callbackForceClick = [](Napi::Env env, Napi::Function jsCallback) { jsCallback.Call({}); };
+	if (info.Length() > 0 && info[0].IsFunction()) {
+		tsfnForceClick = Napi::ThreadSafeFunction::New(env, info[0].As<Napi::Function>(), "ForceClick", 0, 1);
+		callbackForceClick = [](Napi::Env env, Napi::Function jsCallback) { jsCallback.Call({}); };
+	} else {
+		tsfnForceClick = NULL;
+		callbackForceClick = NULL;
+	}
 }
 
 void triggerFeedback(const Napi::CallbackInfo &info) {
